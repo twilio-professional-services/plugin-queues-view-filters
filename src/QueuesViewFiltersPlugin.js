@@ -19,6 +19,6 @@ export default class QueuesViewFiltersPlugin extends FlexPlugin {
    * @param manager { import('@twilio/flex-ui').Manager }
    */
   init(flex, manager) {
-    flex.RootContainer.Content.add(<WorkerAttributeWatcher key="workerAttributeWatcher"/>);
+    flex.QueuesStatsView.Content.add(<WorkerAttributeWatcher key="workerAttributeWatcher"/>);
   }
 }
