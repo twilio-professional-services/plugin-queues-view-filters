@@ -30,28 +30,6 @@ export default class QueuesViewFiltersPlugin extends FlexPlugin {
       sortOrder: 0
     });
 
-    /*flex.QueuesStatsView.Content.add(<TeamFiltersPanel key="TeamFiltersPanel"/>, 
-    {
-      sortOrder: -1
-    });*/
 
-    // Remove the original agents column
-    Flex.QueuesStats.QueuesDataTable.Content.remove("agents");
-
-    // Create a new column with custom formatting
-    Flex.QueuesStats.QueuesDataTable.Content.add(
-    <ColumnDefinition
-      key="offline-agents"
-      header="Offline Agents"
-      content={(queue) => {
-        
-        const offlineAgents = queue.activity_statistics
-        .filter((activity) =>  activity.friendly_name === "Offline")
-        .reduce((acc, activity) => acc + activity.workers, 0);
-        // Return the element to render
-        return <span>{offlineAgents}</span>;
-      }}/>,
-    { sortOrder: 10 } // Put this after the second column
-  );
   }
 }
