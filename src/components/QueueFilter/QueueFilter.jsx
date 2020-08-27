@@ -23,13 +23,13 @@ class QueueFilter extends Component {
    }
 
     setQueuesDefaults = () => {
+        const { selectedValues, queueValues } = this.props;
+        const selectedQueues = selectedValues ? selectedValues : queueValues;
 
-      this.setState({
-        selectedQueues: JSON.parse(this.props.selectedValues),
-        allQueues: this.props.queueValues}
-      );
-      if(!this.state.selectedQueues) {
-        this.setState({ selectedQueues: this.props.queueValues})}
+        this.setState({
+            selectedQueues,
+            allQueues: queueValues}
+        );
     }
 
     handleCheckBox(event) {
@@ -51,17 +51,16 @@ class QueueFilter extends Component {
       
     }
 
-  handleSubmit(event) {
-  event.preventDefault();
+    handleSubmit(event) {
+        event.preventDefault();
 
-  //Get all worker attributes
-  var workerAttributes = Flex.Manager.getInstance().store.getState().flex.worker.attributes;
+        //Get all worker attributes
+        var workerAttributes = Flex.Manager.getInstance().store.getState().flex.worker.attributes;
 
-  //Update Worker Attributes
-  Flex.Manager.getInstance().workerClient
-  .setAttributes({ ...workerAttributes, queues_view_filters: JSON.stringify(this.state.selectedQueues) });
-
-  }
+        //Update Worker Attributes
+        Flex.Manager.getInstance().workerClient
+        .setAttributes({ ...workerAttributes, queues_view_filters: this.state.selectedQueues });
+    }
     
   render() {
   return (<div>
