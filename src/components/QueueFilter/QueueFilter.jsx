@@ -5,18 +5,10 @@ import CheckBox from "./CheckBox";
 
 
 class QueueFilter extends Component {
-    constructor(props) {
-      super(props);
-      
-      this.state = {
+    state = {
       selectedQueues: [],
       allQueues: []
-      };
-  
-      this.handleSubmit = this.handleSubmit.bind(this);
-      this.handleCheckBox = this.handleCheckBox.bind(this);
-
-    }
+    };
 
     componentDidMount() {
       this.setQueuesDefaults();
@@ -32,7 +24,7 @@ class QueueFilter extends Component {
         );
     }
 
-    handleCheckBox(event) {
+    handleCheckBox = event => {
       const newSelection = event.target.value;
       let newSelectionArray;
       
@@ -49,9 +41,9 @@ class QueueFilter extends Component {
         selectedQueues: newSelectionArray }
       ));
       
-    }
+    };
 
-    handleSubmit(event) {
+    handleSubmit = event => {
         event.preventDefault();
 
         //Get all worker attributes
@@ -60,7 +52,7 @@ class QueueFilter extends Component {
         //Update Worker Attributes
         Flex.Manager.getInstance().workerClient
         .setAttributes({ ...workerAttributes, queues_view_filters: this.state.selectedQueues });
-    }
+    };
     
   render() {
   return (<div>
