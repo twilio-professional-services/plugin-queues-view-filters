@@ -151,11 +151,15 @@ class QueueFilter extends Component {
 const mapStateToProps = (state) => {
   const componentViewStates = state.flex.view.componentViewStates;
   const QueueFilterViewState = componentViewStates && componentViewStates.QueueFilter;
-  const isHidden = QueueFilterViewState && QueueFilterViewState.isHidden;
+  let isHidden = QueueFilterViewState && QueueFilterViewState.isHidden;
   const selectedValues = state['flex'].worker.attributes['queues_view_filters'];
   const queueValues = state.flex.realtimeQueues && state.flex.realtimeQueues.queuesList ? 
   Object.values(state.flex.realtimeQueues.queuesList)
   .map(queue => queue.friendly_name) : [];
+
+  if (isHidden === undefined) {
+    isHidden = true;
+  }
   
   return {
     queueValues, selectedValues, isHidden

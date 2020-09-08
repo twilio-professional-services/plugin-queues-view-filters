@@ -27,8 +27,5 @@ export default class QueuesViewFiltersPlugin extends FlexPlugin {
     });
     Flex.QueuesStatsView.Content.add(<WorkerAttributeWatcher key="workerAttributeWatcher" />);
     Flex.MainContainer.Content.add(<QueueFilter key="queueFilter" />);
-    //Flex.QueuesStatsView.Content.add(<QueueFilter key="queueFilter" />);
-
-
   }
 }
