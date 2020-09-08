@@ -1,8 +1,8 @@
 import React from 'react';
 import * as Flex from '@twilio/flex-ui';
 import { FlexPlugin } from 'flex-plugin';
-import { ColumnDefinition } from "@twilio/flex-ui";
 
+import QueueSelector from './components/QueueSelector';
 import WorkerAttributeWatcher from './components/WorkerAttributeWatcher/WorkerAttributeWatcher.jsx'
 import QueueFilter from './components/QueueFilter/QueueFilter.jsx'
 
@@ -22,13 +22,12 @@ export default class QueuesViewFiltersPlugin extends FlexPlugin {
    * @param manager { import('@twilio/flex-ui').Manager }
    */
   init(flex, manager) {
-    Flex.QueuesStatsView.Content.add(<WorkerAttributeWatcher key="workerAttributeWatcher"/>,{
-      sortOrder: 0
+    Flex.QueuesStatsView.Content.add(<QueueSelector key="queueSelector"/>, {
+      align: "start", sortOrder: 0
     });
-    Flex.QueuesStatsView.Content.add(<QueueFilter key="queueFilter"/>, 
-    {
-      sortOrder: 0
-    });
+    Flex.QueuesStatsView.Content.add(<WorkerAttributeWatcher key="workerAttributeWatcher" />);
+    Flex.MainContainer.Content.add(<QueueFilter key="queueFilter" />);
+    //Flex.QueuesStatsView.Content.add(<QueueFilter key="queueFilter" />);
 
 
   }
