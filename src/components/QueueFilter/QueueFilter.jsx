@@ -26,12 +26,13 @@ class QueueFilter extends Component {
       super(props);
       
       this.state = {
-      selectedQueues: [],
-      allQueues: []
+        selectedQueues: [],
       };
   
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleCheckBox = this.handleCheckBox.bind(this);
+      this.setQueuesDefaults = this.setQueuesDefaults.bind(this);
+      this.checkBulk = this.checkBulk.bind(this);
 
     }
 
@@ -44,9 +45,8 @@ class QueueFilter extends Component {
       const { selectedValues, queueValues } = this.props;	
       const selectedQueues = selectedValues ? selectedValues : queueValues;	
       this.setState({	
-          selectedQueues,	
-          allQueues: queueValues}	
-      )	
+        selectedQueues,	
+      })	
     }
 
     handleCloseClick = () => {
@@ -62,12 +62,10 @@ class QueueFilter extends Component {
       let newSelectionArray;
       
       if (this.state.selectedQueues.indexOf(newSelection) !== -1) {
-          newSelectionArray = this.state.selectedQueues.filter(
-          s => s !== newSelection
-          );} 
-        else {
-          newSelectionArray = [...this.state.selectedQueues, newSelection];
-          }
+        newSelectionArray = this.state.selectedQueues.filter(s => s !== newSelection);
+      } else {
+        newSelectionArray = [...this.state.selectedQueues, newSelection];
+      }
   
       this.setState({
         selectedQueues: newSelectionArray }
@@ -76,11 +74,8 @@ class QueueFilter extends Component {
     }
   
     checkBulk = (all) => {
-      
       this.setState({
-          selectedQueues:  all ? 
-              this.state.allQueues:
-              []
+        selectedQueues:  all ? this.props.queueValues:[]
       })
     }
 
@@ -93,12 +88,11 @@ class QueueFilter extends Component {
       //Update Worker Attributes
       Flex.Manager.getInstance().workerClient
       .setAttributes({ ...workerAttributes, queues_view_filters: this.state.selectedQueues });
-
     }
     
   render() {
 
-    const { isHidden, classes } = this.props;
+    const { isHidden, classes, queueValues } = this.props;
     
     return (
       <Flex.SidePanel
@@ -129,24 +123,24 @@ class QueueFilter extends Component {
                     </div>      
           </div>
           <div className="queueViewer">
-              {this.state.allQueues.map((queue, index) => {
-                        return (
-                            <FormControlLabel
-                                key={index}
-                                control={
-                                    <Checkbox 
-                                        name={queue} 
-                                        className="label"
-                                        color="primary"
-                                        value={queue} 
-                                        checked={this.state.selectedQueues.indexOf(queue) !== -1}
-                                        onChange={this.handleCheckBox} 
-                                    />
-                                }
-                                label={queue}
-                            />
-                        )
-                    })} 
+              {queueValues.map((queue, index) => {
+                  return (
+                      <FormControlLabel
+                          key={index}
+                          control={
+                              <Checkbox 
+                                  name={queue} 
+                                  className="label"
+                                  color="primary"
+                                  value={queue} 
+                                  checked={this.state.selectedQueues.indexOf(queue) !== -1}
+                                  onChange={this.handleCheckBox} 
+                              />
+                          }
+                          label={queue}
+                      />
+                  )
+                })} 
           </div>
           
       </Flex.SidePanel>
