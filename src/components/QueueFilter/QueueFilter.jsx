@@ -28,11 +28,6 @@ class QueueFilter extends Component {
       this.state = {
         selectedQueues: [],
       };
-  
-      this.handleSubmit = this.handleSubmit.bind(this);
-      this.handleCheckBox = this.handleCheckBox.bind(this);
-      this.setQueuesDefaults = this.setQueuesDefaults.bind(this);
-      this.checkBulk = this.checkBulk.bind(this);
 
     }
 
@@ -79,7 +74,7 @@ class QueueFilter extends Component {
       })
     }
 
-    handleSubmit(event) {
+    handleSubmit = (event) => {
       event.preventDefault();
 
       //Get all worker attributes
@@ -88,6 +83,8 @@ class QueueFilter extends Component {
       //Update Worker Attributes
       Flex.Manager.getInstance().workerClient
       .setAttributes({ ...workerAttributes, queues_view_filters: this.state.selectedQueues });
+
+      Flex.QueuesStats.setFilter((queue) => this.state.selectedQueues.includes(queue.friendly_name));
     }
     
   render() {
