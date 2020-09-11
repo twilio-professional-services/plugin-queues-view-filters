@@ -1,35 +1,46 @@
-# Your custom Twilio Flex Plugin
+# Queue Filter for Real-Time Queues View
 
-Twilio Flex Plugins allow you to customize the appearance and behavior of [Twilio Flex](https://www.twilio.com/flex). If you want to learn more about the capabilities and how to use the API, check out our [Flex documentation](https://www.twilio.com/docs/flex).
+This Flex Plugin allows you to apply filtering by the queue in the table within Real-Time Queues View.
 
+<p align="center">
+    <img src="src/images/rt_queue_view_filter.png?raw=true" width="600" >
+</p>
+
+--- 
 ## Setup
 
-Make sure you have [Node.js](https://nodejs.org) as well as [`npm`](https://npmjs.com) installed.
+### Requirements
 
-Afterwards, install the dependencies by running `npm install`:
+- An active Twilio account. [Sign up](https://www.twilio.com/try-twilio) if you don't already have one.
+
+- Real-time Queues View enabled. The feature can be activated via Twilio Console Admin -> Pre-release Features -> REAL-TIME QUEUES VIEW. 
+
+- Make sure you have [Node.js](https://nodejs.org) as well as [`npm`](https://npmjs.com) installed.
+
+
+---
+
+## Local development
+
+1. Clone this repository.
+2. Rename the example app configuration file.
+3. Install dependencies.
 
 ```bash
-cd 
-
-# If you use npm
 npm install
 ```
 
-## Development
-
-In order to develop locally, you can use the Webpack Dev Server by running:
+4. Run the application.
 
 ```bash
 npm start
 ```
 
-This will automatically start up the Webpack Dev Server and open the browser for you. Your app will run on `http://localhost:3000`. If you want to change that you can do this by setting the `PORT` environment variable:
-
-```bash
-PORT=3001 npm start
-```
+5. Navigate to [http://localhost:3000](http://localhost:3000).
 
 When you make changes to your code, the browser window will be automatically refreshed.
+
+---
 
 ## Deploy
 
@@ -39,12 +50,15 @@ When you are ready to deploy your plugin, in your terminal run:
 npm run deploy
 ```
 
-This will publish your plugin as a Private Asset that is accessible by the Functions & Assets API. If you want to deploy your plugin as a Public Asset, you may pass --public to your deploy command:
+This will publish your plugin as a Private Asset that is accessible by the Functions & Assets API. 
 
-```bash
-npm run deploy --public
-```
 
-For more details on deploying your plugin, refer to the [deploying your plugin guide](https://www.twilio.com/docs/flex/plugins#deploying-your-plugin).
+---
 
-Note: Common packages like `React`, `ReactDOM`, `Redux` and `ReactRedux` are not bundled with the build because they are treated as external dependencies so the plugin will depend on Flex to provide them globally.
+## Changelog
+
+### 1.0
+
+** September 10, 2020 **
+
+- Added README.

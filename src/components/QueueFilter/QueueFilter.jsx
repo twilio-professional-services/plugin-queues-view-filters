@@ -22,14 +22,9 @@ const styles = {
 };
 
 class QueueFilter extends Component {
-    constructor(props) {
-      super(props);
-      
-      this.state = {
+    state = {
         selectedQueues: [],
-      };
-
-    }
+      }
 
     componentDidMount() {
       this.setQueuesDefaults();
@@ -84,7 +79,7 @@ class QueueFilter extends Component {
       Flex.Manager.getInstance().workerClient
       .setAttributes({ ...workerAttributes, queues_view_filters: this.state.selectedQueues });
 
-      Flex.QueuesStats.setFilter((queue) => this.state.selectedQueues.includes(queue.friendly_name));
+      Flex.QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name));
     }
     
   render() {
