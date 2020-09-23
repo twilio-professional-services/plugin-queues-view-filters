@@ -1,0 +1,39 @@
+.button {    
+    align-self: center;
+    font-size: 10px;
+    white-space: nowrap;
+    width: 107px;
+    height: 32px;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: left;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: rgb(34, 34, 34);
+    outline: none;
+    border-radius: 0px;
+    padding: 0px 8px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(204, 204, 204);
+    margin: 16px 16px 0 0;
+}
+
+.button:hover {
+    background: rgba(207, 207, 207, 0.2);
+    border-radius: 0px;
+    cursor: pointer;
+}
+
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: right;
+}
+
+.bold {
+    font-weight: bold;
+}

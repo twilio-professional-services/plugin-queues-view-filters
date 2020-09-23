@@ -1,0 +1,57 @@
+.queueSelectorPanel{
+    position: relative;
+    width: 100px;
+}
+
+.queueViewer{
+    position: absolute;
+    top: 100px;
+    right: 0;
+    left: 0; 
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    overflow-y: auto;
+    border-top: 1px solid #CCC; 
+    border-bottom: 1px solid #CCC;
+    padding: 10px 0 0 10px;
+}
+
+.label {
+    padding: 5px !important;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.header-button-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.header-description {
+    margin-left: 20px;
+    display: flex;
+}
+
+.header-button-description {
+    margin-right: 10px;
+}
+
+
+.link {
+    color: #1975D3;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 5px 0 0;
+}
+
+.bold {
+    font-weight: bold;
+}
