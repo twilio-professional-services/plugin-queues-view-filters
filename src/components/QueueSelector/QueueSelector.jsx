@@ -1,25 +1,25 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as Flex from '@twilio/flex-ui'
+import { Actions, QueuesStats, Icon } from '@twilio/flex-ui'
 
 import './styles.css'
 
-class QueueSelector extends React.Component {
+export class QueueSelector extends React.Component {
   toggleQueueFilterView = () => {
-    Flex.Actions.invokeAction('SetComponentState', {
+    Actions.invokeAction('SetComponentState', {
       name: 'QueueFilter',
       state: { isHidden: !this.props.isHidden },
     })
   }
 
   componentDidMount() {
-    Flex.Actions.invokeAction('SetComponentState', {
+    Actions.invokeAction('SetComponentState', {
       name: 'QueueFilter',
       state: { isHidden: typeof this.props.isHidden === 'undefined' ? true : this.props.isHidden },
     })
 
-    if (this.props.selectedValues) {
-      Flex.QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name))
+    if (this.props.selectedValues && this.props.selectedValues.length) {
+      QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name))
     }
   }
 
@@ -27,7 +27,7 @@ class QueueSelector extends React.Component {
     return (
       <div className="wrapper">
         <div className="button" onClick={this.toggleQueueFilterView}>
-          Filter <Flex.Icon icon="Filter" />
+          Filter <Icon icon="Filter" />
         </div>
       </div>
     )

@@ -1,11 +1,13 @@
-import * as Flex from '@twilio/flex-ui'
-import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import './styles.css'
+import { connect } from 'react-redux'
+import { QueuesStats, Actions, SidePanel } from '@twilio/flex-ui'
+
 import Button from '@material-ui/core/Button'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import { withStyles } from '@material-ui/core/styles'
+
+import './styles.css'
 
 const styles = {
   contained: {
@@ -19,7 +21,7 @@ const styles = {
   },
 }
 
-class QueueFilter extends Component {
+export class QueueFilter extends Component {
   state = {
     selectedQueues: [],
   }
@@ -30,7 +32,7 @@ class QueueFilter extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.selectedValues !== this.props.selectedValues && this.props.selectedValues) {
-      Flex.QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name))
+      QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name))
     }
   }
 
@@ -43,7 +45,7 @@ class QueueFilter extends Component {
   }
 
   handleCloseClick = () => {
-    Flex.Actions.invokeAction('SetComponentState', {
+    Actions.invokeAction('SetComponentState', {
       name: 'QueueFilter',
       state: { isHidden: !this.props.isHidden },
     })
@@ -87,7 +89,7 @@ class QueueFilter extends Component {
     const { isHidden, classes, queueValues } = this.props
 
     return (
-      <Flex.SidePanel
+      <SidePanel
         displayName="QueueSelectorPanel"
         className="queueSelectorPanel"
         title={<div>QUEUES</div>}
@@ -96,11 +98,11 @@ class QueueFilter extends Component {
       >
         <div className="header">
           <div className="header-description">
-            <div className="link" onClick={() => this.checkBulk(true)}>
+            <div id="allLink" className="link" onClick={() => this.checkBulk(true)}>
               All
             </div>{' '}
             |
-            <div className="link" onClick={() => this.checkBulk(false)}>
+            <div id="noneLink" className="link" onClick={() => this.checkBulk(false)}>
               None
             </div>
           </div>
@@ -139,7 +141,7 @@ class QueueFilter extends Component {
             )
           })}
         </div>
-      </Flex.SidePanel>
+      </SidePanel>
     )
   }
 }
