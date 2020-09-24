@@ -7,6 +7,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import { withStyles } from '@material-ui/core/styles'
 
+import { getFlexState, getWorkerClient } from '../../helpers/manager'
+
 import './styles.css'
 
 const styles = {
@@ -76,10 +78,10 @@ export class QueueFilter extends Component {
     event.preventDefault()
 
     //Get all worker attributes
-    var workerAttributes = Flex.Manager.getInstance().store.getState().flex.worker.attributes
+    var workerAttributes = getFlexState().worker.attributes
 
     //Update Worker Attributes
-    Flex.Manager.getInstance().workerClient.setAttributes({
+    getWorkerClient().setAttributes({
       ...workerAttributes,
       queues_view_filters: this.state.selectedQueues,
     })
@@ -109,6 +111,7 @@ export class QueueFilter extends Component {
           <div className="header-button-wrapper">
             <div className="header-button-description">
               <Button
+                id="applyButton"
                 variant="contained"
                 color="primary"
                 onClick={this.handleSubmit}

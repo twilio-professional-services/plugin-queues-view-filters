@@ -1,11 +1,12 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { QueuesStats, Actions } from '@twilio/flex-ui'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 import { QueueFilter } from './QueueFilter'
+import { getWorkerClient, getFlexState } from '../../helpers/manager'
 
+jest.mock('../../helpers/manager')
 jest.mock('@twilio/flex-ui', () => {
   return {
     Actions: {
@@ -21,6 +22,7 @@ jest.mock('@twilio/flex-ui', () => {
 describe('QueueFilter', () => {
   let props
   let subject
+  let setAttributesSpy
 
   beforeEach(() => {
     props = {
@@ -31,6 +33,22 @@ describe('QueueFilter', () => {
         contained: '',
       },
     }
+
+    setAttributesSpy = jest.fn()
+
+    getWorkerClient.mockImplementation(() => {
+      return {
+        setAttributes: setAttributesSpy,
+      }
+    })
+
+    getFlexState.mockImplementation(() => {
+      return {
+        worker: {
+          attributes: {},
+        },
+      }
+    })
   })
 
   it('renders form control for each value in queueValues', () => {
@@ -51,5 +69,16 @@ describe('QueueFilter', () => {
     const none = subject.find('#noneLink')
     none.at(0).simulate('click')
     expect(subject.state('selectedQueues')).toEqual([])
+  })
+
+  it('clicking on apply will attempt to update worker attributes', () => {
+    subject = shallow(<QueueFilter {...props} />)
+    const apply = subject.find('#applyButton')
+    apply.at(0).simulate('click', {
+      preventDefault: () => {},
+    })
+    expect(setAttributesSpy).toHaveBeenCalledWith({
+      queues_view_filters: [],
+    })
   })
 })
