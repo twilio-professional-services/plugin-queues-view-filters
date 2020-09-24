@@ -6,17 +6,17 @@ This Flex Plugin allows you to apply filtering by the queue in the table within 
     <img src="src/images/rt_queue_view_filter.png?raw=true" width="600" >
 </p>
 
---- 
+---
+
 ## Setup
 
 ### Requirements
 
 - An active Twilio account. [Sign up](https://www.twilio.com/try-twilio) if you don't already have one.
 
-- Real-time Queues View enabled. The feature can be activated via Twilio Console Admin -> Pre-release Features -> REAL-TIME QUEUES VIEW. 
+- Real-time Queues View enabled. The feature can be activated via Twilio Console Admin -> Pre-release Features -> REAL-TIME QUEUES VIEW.
 
 - Make sure you have [Node.js](https://nodejs.org) as well as [`npm`](https://npmjs.com) installed.
-
 
 ---
 
@@ -50,15 +50,20 @@ When you are ready to deploy your plugin, in your terminal run:
 npm run deploy
 ```
 
-This will publish your plugin as a Private Asset that is accessible by the Functions & Assets API. 
-
+This will publish your plugin as a Private Asset that is accessible by the Functions & Assets API.
 
 ---
 
 ## Changelog
 
+### 1.1
+
+**September 24, 2020**
+
+- Added a test suite, github actions and prettier.
+
 ### 1.0
 
-** September 10, 2020 **
+**September 10, 2020**
 
 - Added README.
