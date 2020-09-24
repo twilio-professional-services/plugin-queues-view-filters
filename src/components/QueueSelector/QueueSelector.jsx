@@ -20,8 +20,9 @@ class QueueSelector extends React.Component {
             state: { isHidden: (typeof this.props.isHidden === "undefined") ? true : this.props.isHidden  }
         });
 
-        Flex.QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name));
-
+        if (this.props.selectedValues) {
+            Flex.QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name));
+        }
     }   
 
     render () {

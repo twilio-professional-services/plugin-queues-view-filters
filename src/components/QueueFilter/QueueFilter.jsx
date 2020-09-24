@@ -31,7 +31,7 @@ class QueueFilter extends Component {
    }
 
    componentDidUpdate(prevProps) {
-     if (prevProps.selectedValues !== this.props.selectedValues) {
+     if (prevProps.selectedValues !== this.props.selectedValues && this.props.selectedValues) {
       Flex.QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name));
      }
    }
