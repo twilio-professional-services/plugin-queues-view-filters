@@ -30,6 +30,12 @@ class QueueFilter extends Component {
       this.setQueuesDefaults();
    }
 
+   componentDidUpdate(prevProps) {
+     if (prevProps.selectedValues !== this.props.selectedValues) {
+      Flex.QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name));
+     }
+   }
+
     setQueuesDefaults = () => {
 
       const { selectedValues, queueValues } = this.props;	
@@ -78,8 +84,6 @@ class QueueFilter extends Component {
       //Update Worker Attributes
       Flex.Manager.getInstance().workerClient
       .setAttributes({ ...workerAttributes, queues_view_filters: this.state.selectedQueues });
-
-      Flex.QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name));
     }
     
   render() {
