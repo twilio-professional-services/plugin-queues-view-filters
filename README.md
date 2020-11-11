@@ -67,3 +67,7 @@ This will publish your plugin as a Private Asset that is accessible by the Funct
 **September 10, 2020**
 
 - Added README.
+
+
+## Disclaimer
+This software is to be considered "sample code", a Type B Deliverable, and is delivered "as-is" to the user. Twilio bears no responsibility to support the use or implementation of this software.
