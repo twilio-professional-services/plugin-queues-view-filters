@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
+
+
 import { connect } from 'react-redux'
 import { QueuesStats, Actions, SidePanel } from '@twilio/flex-ui'
 
 import Button from '@material-ui/core/Button'
+import { Input } from '@material-ui/core';
+
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import { withStyles } from '@material-ui/core/styles'
@@ -26,10 +30,17 @@ const styles = {
 export class QueueFilter extends Component {
   state = {
     selectedQueues: [],
+    input: ''
   }
 
   componentDidMount() {
     this.setQueuesDefaults()
+  }
+
+  onChangeHandler(e){
+    this.setState({
+      input: e.target.value,
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -70,8 +81,9 @@ export class QueueFilter extends Component {
 
   checkBulk = (all) => {
     this.setState({
-      selectedQueues: all ? this.props.queueValues : [],
+      selectedQueues: all ? this.props.queueValues.filter(d => this.state.input === '' || d.toLowerCase().includes(this.state.input.toLowerCase())) : [],
     })
+
   }
 
   handleSubmit = (event) => {
@@ -107,8 +119,15 @@ export class QueueFilter extends Component {
             <div id="noneLink" className="link" onClick={() => this.checkBulk(false)}>
               None
             </div>
+  
           </div>
           <div className="header-button-wrapper">
+          <div className="header-button-description">
+          <form className={classes.root} noValidate autoComplete="off">
+            <Input placeholder="Search" value={this.state.input} type="text" onChange={this.onChangeHandler.bind(this)} />
+
+          </form>
+            </div>
             <div className="header-button-description">
               <Button
                 id="applyButton"
@@ -122,10 +141,11 @@ export class QueueFilter extends Component {
                 Apply
               </Button>
             </div>
+      
           </div>
         </div>
         <div className="queueViewer">
-          {queueValues.map((queue, index) => {
+          {queueValues.filter(d => this.state.input === '' || d.toLowerCase().includes(this.state.input.toLowerCase())).sort().map((queue, index)=> {
             return (
               <FormControlLabel
                 key={index}

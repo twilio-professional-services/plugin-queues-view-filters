@@ -15,6 +15,7 @@
     border-top: 1px solid #CCC; 
     border-bottom: 1px solid #CCC;
     padding: 10px 0 0 10px;
+    height: 80%;
 }
 
 .label {
@@ -48,6 +49,12 @@
 .link {
     color: #1975D3;
     cursor: pointer;
+    font-weight: bold;
+    margin: 0 5px 0 0;
+}
+
+.input {
+    color: #1975D3;
     font-weight: bold;
     margin: 0 5px 0 0;
 }
