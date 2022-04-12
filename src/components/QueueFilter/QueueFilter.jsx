@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { QueuesStats, Actions, SidePanel } from '@twilio/flex-ui'
 
 import Button from '@material-ui/core/Button'
-import { Input } from '@material-ui/core';
+import { Input, Tooltip } from '@material-ui/core';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -46,6 +46,10 @@ export class QueueFilter extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.selectedValues !== this.props.selectedValues && this.props.selectedValues) {
       QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name))
+      
+      QueuesStats.setSubscriptionFilter((queue) =>
+         this.props.selectedValues.includes(queue.friendly_name)
+       );
     }
   }
 
@@ -147,6 +151,9 @@ export class QueueFilter extends Component {
         <div className="queueViewer">
           {queueValues.filter(d => this.state.input === '' || d.toLowerCase().includes(this.state.input.toLowerCase())).sort().map((queue, index)=> {
             return (
+              <Tooltip                 
+              key={index}
+              title={queue}>
               <FormControlLabel
                 key={index}
                 control={
@@ -161,6 +168,7 @@ export class QueueFilter extends Component {
                 }
                 label={queue}
               />
+              </Tooltip>
             )
           })}
         </div>

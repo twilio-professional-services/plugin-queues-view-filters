@@ -20,6 +20,10 @@ export class QueueSelector extends React.Component {
 
     if (this.props.selectedValues && this.props.selectedValues.length) {
       QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name))
+      QueuesStats.setSubscriptionFilter((queue) =>
+      this.props.selectedValues.includes(queue.friendly_name)
+    );
+
     }
   }
 
