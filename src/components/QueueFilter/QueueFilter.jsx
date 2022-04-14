@@ -41,11 +41,6 @@ export class QueueFilter extends Component {
     this.setQueuesDefaults()
   }
 
-  onChangeHandler(e){
-    this.setState({
-      input: e.target.value,
-    })
-  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.selectedValues !== this.props.selectedValues && this.props.selectedValues) {
@@ -70,6 +65,15 @@ export class QueueFilter extends Component {
       name: 'QueueFilter',
       state: { isHidden: !this.props.isHidden },
     })
+  }
+
+  onChangeHandler(e){
+    this.setState({
+      input: e.target.value,
+      selectedQueues: this.props.queueValues.filter(d => e.target.value === '' || d.toLowerCase().includes(e.target.value.toLowerCase()))
+    })
+
+
   }
 
   handleCheckBox = (event) => {
