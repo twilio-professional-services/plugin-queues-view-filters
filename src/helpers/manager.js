@@ -12,23 +12,13 @@ export const getFlexState = () => {
   return getInstance().store.getState().flex
 }
 
-/**
- * Check if key exists in local storage
- * @param  string key
- * @return boolean
- */
- function localStorageHas (key) {
-  var item = localStorage.getItem(key);
-
-  return ( item !== null );
-}
 
 /**
  * Retrive an object from local storage.
  * @param  string key
  * @return mixed
  */
-function localStorageGet (key) {
+export function localStorageGet (key) {
   var item = localStorage.getItem(key);
 
   if ( ! item ) return;

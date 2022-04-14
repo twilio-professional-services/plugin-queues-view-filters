@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 
-
 import { connect } from 'react-redux'
 import { QueuesStats, Actions, SidePanel } from '@twilio/flex-ui'
+import * as Flex from '@twilio/flex-ui'
+import { Actions as StateActions} from '../../states/State';
+
 
 import Button from '@material-ui/core/Button'
 import { Input, Tooltip } from '@material-ui/core';
@@ -11,7 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import { withStyles } from '@material-ui/core/styles'
 
-import { getFlexState, getWorkerClient } from '../../helpers/manager'
+import { localStorageSave,localStorageGet } from '../../helpers/manager'
 
 import './styles.css'
 
@@ -32,6 +34,8 @@ export class QueueFilter extends Component {
     selectedQueues: [],
     input: ''
   }
+
+  dispatch = (f) => Flex.Manager.getInstance().store.dispatch(f);
 
   componentDidMount() {
     this.setQueuesDefaults()
@@ -93,18 +97,13 @@ export class QueueFilter extends Component {
   handleSubmit = (event) => {
     event.preventDefault()
 
-    //Get all worker attributes
-    var workerAttributes = getFlexState().worker.attributes
-
-    //Update Worker Attributes
-    getWorkerClient().setAttributes({
-      ...workerAttributes,
-      queues_view_filters: this.state.selectedQueues,
-    })
+    localStorageSave("queues_view_filters",this.state.selectedQueues);
+    this.dispatch(StateActions.updatedQueues(localStorageGet("queues_view_filters")));
   }
 
   render() {
     const { isHidden, classes, queueValues } = this.props
+
 
     return (
       <SidePanel
@@ -177,11 +176,13 @@ export class QueueFilter extends Component {
   }
 }
 
+
 const mapStateToProps = (state) => {
   const componentViewStates = state.flex.view.componentViewStates
   const QueueFilterViewState = componentViewStates && componentViewStates.QueueFilter
   let isHidden = QueueFilterViewState && QueueFilterViewState.isHidden
-  const selectedValues = state['flex'].worker.attributes['queues_view_filters']
+  const selectedValues = state['queues-filter'].filterQueues.selectedQueues
+
   const queueValues =
     state.flex.realtimeQueues && state.flex.realtimeQueues.queuesList
       ? Object.values(state.flex.realtimeQueues.queuesList).map((queue) => queue.friendly_name)

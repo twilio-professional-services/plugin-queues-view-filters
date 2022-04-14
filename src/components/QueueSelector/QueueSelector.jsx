@@ -25,6 +25,7 @@ export class QueueSelector extends React.Component {
     );
 
     }
+
   }
 
   render() {
@@ -42,7 +43,9 @@ const mapStateToProps = (state) => {
   const componentViewStates = state.flex.view.componentViewStates
   const QueueFilterState = componentViewStates && componentViewStates.QueueFilter
   const isHidden = QueueFilterState && QueueFilterState.isHidden
-  const selectedValues = state['flex'].worker.attributes['queues_view_filters']
+  // const selectedValues = state['flex'].worker.attributes['queues_view_filters']
+  const selectedValues = state['queues-filter'].filterQueues.selectedQueues
+
 
   return {
     isHidden,
