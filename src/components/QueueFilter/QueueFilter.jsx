@@ -1,21 +1,18 @@
 import React, { Component } from 'react'
+import {Theme} from '@twilio-paste/core/theme';
 
 import { connect } from 'react-redux'
 import { QueuesStats, Actions, SidePanel } from '@twilio/flex-ui'
 import * as Flex from '@twilio/flex-ui'
 import { Actions as StateActions} from '../../states/State';
 
+import {Input, Button,Checkbox} from '@twilio-paste/core';
 
-import Button from '@material-ui/core/Button'
-import { Input, Tooltip } from '@material-ui/core';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
 import { withStyles } from '@material-ui/core/styles'
-
 import { localStorageSave,localStorageGet } from '../../helpers/manager'
 
 import './styles.css'
+
 
 const styles = {
   contained: {
@@ -28,7 +25,6 @@ const styles = {
     fontSize: '11px',
   },
 }
-
 export class QueueFilter extends Component {
   state = {
     selectedQueues: [],
@@ -38,19 +34,21 @@ export class QueueFilter extends Component {
   dispatch = (f) => Flex.Manager.getInstance().store.dispatch(f);
 
   componentDidMount() {
-    this.setQueuesDefaults()
+    this.setQueuesDefaults();
+    
   }
 
 
   componentDidUpdate(prevProps) {
+
     if (prevProps.selectedValues !== this.props.selectedValues && this.props.selectedValues) {
       QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name))
-      
       QueuesStats.setSubscriptionFilter((queue) =>
          this.props.selectedValues.includes(queue.friendly_name)
        );
     }
   }
+
 
   setQueuesDefaults = () => {
     const { selectedValues, queueValues } = this.props
@@ -108,8 +106,8 @@ export class QueueFilter extends Component {
   render() {
     const { isHidden, classes, queueValues } = this.props
 
-
     return (
+      <Theme.Provider theme="default">
       <SidePanel
         displayName="QueueSelectorPanel"
         className="queueSelectorPanel"
@@ -136,6 +134,7 @@ export class QueueFilter extends Component {
           </form>
             </div>
             <div className="header-button-description">
+           
               <Button
                 id="applyButton"
                 variant="contained"
@@ -152,30 +151,29 @@ export class QueueFilter extends Component {
           </div>
         </div>
         <div className="queueViewer">
+      
           {queueValues.filter(d => this.state.input === '' || d.toLowerCase().includes(this.state.input.toLowerCase())).sort().map((queue, index)=> {
             return (
-              <Tooltip                 
-              key={index}
-              title={queue}>
-              <FormControlLabel
-                key={index}
-                control={
+            
+              <div>                
                   <Checkbox
                     name={queue}
-                    className="label"
-                    color="primary"
+                    id={queue}
                     value={queue}
+                    className="label"
                     checked={this.state.selectedQueues.indexOf(queue) !== -1}
                     onChange={this.handleCheckBox}
-                  />
-                }
-                label={queue}
-              />
-              </Tooltip>
+                  >
+                    {queue}
+                  </Checkbox>
+              
+              </div>
+            
             )
           })}
         </div>
       </SidePanel>
+      </Theme.Provider>
     )
   }
 }
@@ -184,7 +182,7 @@ export class QueueFilter extends Component {
 const mapStateToProps = (state) => {
   const componentViewStates = state.flex.view.componentViewStates
   const QueueFilterViewState = componentViewStates && componentViewStates.QueueFilter
-  let isHidden = QueueFilterViewState && QueueFilterViewState.isHidden
+  let isHidden = state.flex.view.activeView !== "queues-stats" ? true: QueueFilterViewState && QueueFilterViewState.isHidden;
   const selectedValues = state['queues-filter'].filterQueues.selectedQueues
 
   const queueValues =

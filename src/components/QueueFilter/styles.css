@@ -1,3 +1,4 @@
+
 .queueSelectorPanel{
     position: relative;
     min-width: 250px;
@@ -5,18 +6,7 @@
 }
 
 .queueViewer{
-    position: absolute;
-    top: 100px;
-    right: 0;
-    left: 0; 
-    display: flex;
-    flex-flow: column;
-    justify-content: flex-start;
-    overflow-y: auto;
-    border-top: 1px solid #CCC; 
-    border-bottom: 1px solid #CCC;
-    padding: 10px 0 0 10px;
-    height: 80%;
+   margin-left:20px;
 }
 
 .label {
