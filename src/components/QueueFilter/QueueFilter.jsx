@@ -158,6 +158,7 @@ const mapStateToProps = (state) => {
     state.flex.realtimeQueues && state.flex.realtimeQueues.queuesList
       ? Object.values(state.flex.realtimeQueues.queuesList).map((queue) => queue.friendly_name)
       : []
+  queueValues && queueValues.sort()
 
   if (isHidden === undefined) {
     isHidden = true
