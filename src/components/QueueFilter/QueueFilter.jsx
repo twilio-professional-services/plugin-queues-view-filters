@@ -1,16 +1,16 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {Theme} from '@twilio-paste/core/theme';
-
-import { connect } from 'react-redux'
-import { QueuesStats, Actions, SidePanel } from '@twilio/flex-ui'
-import * as Flex from '@twilio/flex-ui'
-import { Actions as StateActions} from '../../states/State';
-
+import { connect } from 'react-redux';
+import { Actions, SidePanel } from '@twilio/flex-ui';
+import * as Flex from '@twilio/flex-ui';
 import {Input, Button,Checkbox} from '@twilio-paste/core';
+import { withStyles } from '@material-ui/core/styles';
 
-import { withStyles } from '@material-ui/core/styles'
-import { localStorageSave,localStorageGet } from '../../helpers/manager'
-
+import { Actions as StateActions} from '../../states/State';
+import {
+  setLocalQueuesViewFilters,
+  setQueuesStatsFilter
+} from '../../helpers/manager';
 import './styles.css'
 
 
@@ -27,51 +27,41 @@ const styles = {
 }
 export class QueueFilter extends Component {
   state = {
+    input: '',
+    isChangePending: false,
     selectedQueues: [],
-    input: ''
   }
 
   dispatch = (f) => Flex.Manager.getInstance().store.dispatch(f);
 
   componentDidMount() {
     this.setQueuesDefaults();
-    
   }
-
 
   componentDidUpdate(prevProps) {
-
     if (prevProps.selectedValues !== this.props.selectedValues && this.props.selectedValues) {
-      QueuesStats.setFilter((queue) => this.props.selectedValues.includes(queue.friendly_name))
-      QueuesStats.setSubscriptionFilter((queue) =>
-         this.props.selectedValues.includes(queue.friendly_name)
-       );
+      setQueuesStatsFilter(this.props.selectedValues);
+      this.setState({ isChangePending: false });
     }
   }
-
 
   setQueuesDefaults = () => {
     const { selectedValues, queueValues } = this.props
     const selectedQueues = selectedValues ? selectedValues : queueValues
-    this.setState({
-      selectedQueues,
-    })
+    this.setState({ selectedQueues });
   }
 
   handleCloseClick = () => {
     Actions.invokeAction('SetComponentState', {
       name: 'QueueFilter',
       state: { isHidden: !this.props.isHidden },
-    })
+    });
   }
 
   onChangeHandler(e){
     this.setState({
-      input: e.target.value,
-      selectedQueues: this.props.queueValues.filter(d => e.target.value === '' || d.toLowerCase().includes(e.target.value.toLowerCase()))
-    })
-
-
+      input: e.target.value
+    });
   }
 
   handleCheckBox = (event) => {
@@ -85,32 +75,58 @@ export class QueueFilter extends Component {
     }
 
     this.setState({
+      isChangePending: true,
       selectedQueues: newSelectionArray,
-    })
+    });
   }
 
   checkBulk = (all) => {
     this.setState({
-      selectedQueues: all ? this.props.queueValues.filter(d => this.state.input === '' || d.toLowerCase().includes(this.state.input.toLowerCase())) : [],
+      isChangePending: true,
+      selectedQueues: all 
+        ? this.props.queueValues.filter(d => 
+            this.state.input === '' || d.toLowerCase().includes(this.state.input.toLowerCase())
+          )
+        : [],
     })
 
+  }
+
+  isApplyButtonDisabled = () => {
+    const { isChangePending, selectedQueues } = this.state;
+    const { selectedValues } = this.props;
+
+    return !isChangePending && (
+      Array.isArray(selectedQueues) && 
+      Array.isArray(selectedValues) &&
+      selectedQueues.length === selectedValues.length &&
+      selectedQueues.every(q => selectedValues.includes(q))
+    );
   }
 
   handleSubmit = (event) => {
     event.preventDefault()
 
-    localStorageSave("queues_view_filters",this.state.selectedQueues);
-    this.dispatch(StateActions.updatedQueues(localStorageGet("queues_view_filters")));
+    this.handleCloseClick();
+
+    setLocalQueuesViewFilters(this.state.selectedQueues);
+    this.dispatch(StateActions.updatedSelectedQueues(this.state.selectedQueues));
   }
 
   render() {
-    const { isHidden, classes, queueValues } = this.props
+    const {
+      classes,
+      isHidden,
+      queueValues,
+      theme
+    } = this.props;
 
-    return (
+    return isHidden ? null : (
       <Theme.Provider theme="default">
       <SidePanel
         displayName="QueueSelectorPanel"
         className="queueSelectorPanel"
+        themeOverride={theme && theme.OutboundDialerPanel}
         title={<div>QUEUES</div>}
         isHidden={isHidden}
         handleCloseClick={this.handleCloseClick}
@@ -119,7 +135,7 @@ export class QueueFilter extends Component {
           <div className="header-description">
             <div id="allLink" className="link" onClick={() => this.checkBulk(true)}>
               All
-            </div>{' '}
+            </div>
             |
             <div id="noneLink" className="link" onClick={() => this.checkBulk(false)}>
               None
@@ -129,8 +145,12 @@ export class QueueFilter extends Component {
           <div className="header-button-wrapper">
           <div className="header-button-description">
           <form className={classes.root} noValidate autoComplete="off">
-            <Input placeholder="Search" value={this.state.input} type="text" onChange={this.onChangeHandler.bind(this)} />
-
+            <Input 
+              placeholder="Search" 
+              value={this.state.input} 
+              type="text" 
+              onChange={this.onChangeHandler.bind(this)}
+            />
           </form>
             </div>
             <div className="header-button-description">
@@ -143,6 +163,7 @@ export class QueueFilter extends Component {
                 classes={{
                   contained: classes.contained,
                 }}
+                disabled={this.isApplyButtonDisabled()}
               >
                 Apply
               </Button>
@@ -180,25 +201,21 @@ export class QueueFilter extends Component {
 
 
 const mapStateToProps = (state) => {
-  const componentViewStates = state.flex.view.componentViewStates
-  const QueueFilterViewState = componentViewStates && componentViewStates.QueueFilter
-  let isHidden = state.flex.view.activeView !== "queues-stats" ? true: QueueFilterViewState && QueueFilterViewState.isHidden;
-  const selectedValues = state['queues-filter'].filterQueues.selectedQueues
+  const componentViewStates = state.flex.view.componentViewStates;
+  const QueueFilterViewState = componentViewStates && componentViewStates.QueueFilter;
 
-  const queueValues =
-    state.flex.realtimeQueues && state.flex.realtimeQueues.queuesList
-      ? Object.values(state.flex.realtimeQueues.queuesList).map((queue) => queue.friendly_name)
-      : []
+  const isHidden = QueueFilterViewState?.isHidden === undefined
+    ? true
+    : QueueFilterViewState.isHidden;
 
-  if (isHidden === undefined) {
-    isHidden = true
-  }
+  const selectedValues = state['queues-filter'].filterQueues.selectedQueues;
+  const queueValues = state['queues-filter']?.filterQueues?.allQueues?.map(q => q.friendly_name) || [];
 
   return {
+    isHidden,
     queueValues,
     selectedValues,
-    isHidden,
   }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(QueueFilter))
+export default connect(mapStateToProps)(withStyles(styles)(QueueFilter));

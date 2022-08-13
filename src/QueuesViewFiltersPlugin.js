@@ -1,13 +1,15 @@
 import React from 'react'
-import * as Flex from '@twilio/flex-ui'
 import { FlexPlugin } from '@twilio/flex-plugin'
-
 import reducers, { namespace } from './states';
-import { Actions } from './states/State';
+import { Actions as StateActions } from './states/State';
 
 import QueueSelector from './components/QueueSelector/QueueSelector.jsx'
 import QueueFilter from './components/QueueFilter/QueueFilter.jsx'
-import { localStorageGet } from './helpers/manager'
+import {
+  getLocalQueuesViewFilters,
+  setQueuesStatsFilter
+} from './helpers/manager';
+import TaskRouterService from './services/TaskRouterService';
 
 
 const PLUGIN_NAME = 'QueuesViewFiltersPlugin'
@@ -27,17 +29,33 @@ export default class QueuesViewFiltersPlugin extends FlexPlugin {
   init(flex, manager) {
     this.registerReducers(manager);
 
-    // Read selected queues from local storage and push to Redux
-    this.dispatch(Actions.updatedQueues(localStorageGet("queues_view_filters")));
+    TaskRouterService.populateTaskQueues().then(() => {
+      console.log('QueuesViewFiltersPlugin, TaskQueues populated');
+    });
 
-    Flex.QueuesStatsView.Content.add(<QueueSelector key="queueSelector" />, {
+    // Read selected queues from local storage and push to Redux
+    const localQueuesViewFilters = getLocalQueuesViewFilters();
+    const defaultOutboundQueueSid = manager.serviceConfiguration.outbound_call_flows?.default?.queue_sid;
+
+    if (Array.isArray(localQueuesViewFilters) && localQueuesViewFilters.length > 0) {
+      manager.store.dispatch(StateActions.updatedSelectedQueues(localQueuesViewFilters));
+      setQueuesStatsFilter(localQueuesViewFilters);
+    } else if (defaultOutboundQueueSid) {
+      // Setting a default subscription filter, using outbound queue since it's available without
+      // querying any other endpoint and it will reliably be available in realtime stats cache.
+      // Critical to set a filter at Flex UI load, otherwise the realtime queue view will
+      // attempt to subscribe to all queues initially which creates significant performance
+      // issues when 100+ queues exist on TaskRouter
+      flex.QueuesStats.setSubscriptionFilter(q => q.sid === defaultOutboundQueueSid);
+    }
+
+    flex.QueuesStatsView.Content.add(<QueueSelector key="queueSelector" />, {
       align: 'start',
       sortOrder: 0,
     })
-    Flex.MainContainer.Content.add(<QueueFilter key="queueFilter" />)
+    flex.QueuesStatsView.Content.add(<QueueFilter key="queueFilter" />, { sortOrder: -1 })
   }
 
-  dispatch = (f) => Flex.Manager.getInstance().store.dispatch(f);
   /**
    * Registers the plugin reducers
    *

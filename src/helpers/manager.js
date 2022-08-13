@@ -1,4 +1,6 @@
-import { Manager } from '@twilio/flex-ui'
+import { Manager, QueuesStats } from '@twilio/flex-ui'
+
+const localQueuesViewFiltersKey = "queues_view_filters";
 
 export const getInstance = () => {
   return Manager.getInstance()
@@ -11,7 +13,6 @@ export const getWorkerClient = () => {
 export const getFlexState = () => {
   return getInstance().store.getState().flex
 }
-
 
 /**
  * Retrive an object from local storage.
@@ -51,4 +52,21 @@ export function localStorageSave (key, value) {
  */
 function localStorageRemove (key) {
   localStorage.removeItem(key);
+}
+
+export function getLocalQueuesViewFilters () {
+  return localStorageGet(localQueuesViewFiltersKey);
+}
+
+export function setLocalQueuesViewFilters (selectedFilters) {
+  return localStorageSave(localQueuesViewFiltersKey, selectedFilters);
+}
+
+export function setQueuesStatsFilter (selectedQueues) {
+  if (!Array.isArray(selectedQueues)) {
+    return;
+  }
+  
+  QueuesStats.setFilter((q) => selectedQueues.includes(q.friendly_name))
+  QueuesStats.setSubscriptionFilter((q) => selectedQueues.includes(q.friendly_name));
 }

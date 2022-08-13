@@ -1,8 +1,13 @@
 
 .queueSelectorPanel{
-    position: relative;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 100%;
+    overflow-y: scroll;
     min-width: 250px;
     max-width: 350px;
+    z-index: 10;
 }
 
 .queueViewer{
@@ -17,7 +22,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
+    margin-bottom: 15px;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .header-button-wrapper {
@@ -28,12 +35,11 @@
 }
 
 .header-description {
-    margin-left: 20px;
     display: flex;
 }
 
 .header-button-description {
-    margin-right: 10px;
+    margin: 0 3px;
 }
 
 
@@ -41,7 +47,7 @@
     color: #1975D3;
     cursor: pointer;
     font-weight: bold;
-    margin: 0 5px 0 0;
+    margin: 0 3px;
 }
 
 .input {
