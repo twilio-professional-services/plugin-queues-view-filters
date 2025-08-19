@@ -1,3 +1,7 @@
+# Notice - Legacy Code
+
+**This plugin is no longer maintained, as it is now available as an out-of-box feature.**
+
 # Queue Filter for Real-Time Queues View
 
 This Flex Plugin allows you to apply filtering by the queue in the table within Real-Time Queues View.
